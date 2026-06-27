@@ -360,3 +360,19 @@ interface Trip {
   ratingComment: string | null;
 }
 ```
+
+---
+
+## Sistema de calificación — E2E Frontend (20 puntos)
+
+Cada pantalla es obligatoria. Todos los endpoints del backend deben ser consumidos.
+
+| # | Pantalla | Pts | Endpoints requeridos |
+|---|---|---|---|
+| 1 | **Login / Registro** — formulario con email, contraseña y selector de rol. Guarda el JWT en `localStorage`, lo adjunta en cada request como `Authorization: Bearer <token>` y redirige según rol | 3 | `POST /auth/register` · `POST /auth/login` · `GET /users/me` |
+| 2 | **Dashboard pasajero** — muestra nombre del usuario, botón para pedir viaje y lista de sus viajes con badge de estado (`PENDING` / `IN_PROGRESS` / `COMPLETED`) | 3 | `GET /users/me` · `GET /trips` |
+| 3 | **Solicitar viaje** — muestra conductores disponibles antes de confirmar, formulario con origen y destino, llama `POST /trips` y redirige al detalle del viaje creado | 2 | `GET /drivers/available` · `POST /trips` |
+| 4 | **Detalle de viaje (pasajero)** — muestra pickup, dropoff, estado y conductor asignado (nombre + rating) o "buscando conductor..." si `driver` es `null`. Si el viaje está `COMPLETED` y `passengerRating` es `null`, muestra formulario de calificación (1–5 estrellas + comentario opcional). Hace polling cada 3–5 s mientras el estado sea `PENDING` o `IN_PROGRESS` | 4 | `GET /trips/{id}` · `POST /trips/{id}/rate` |
+| 5 | **Dashboard conductor** — muestra su propio rating, lista viajes `PENDING` con botón "Aceptar" y resalta al inicio el viaje activo (`IN_PROGRESS`) con botón "Completar viaje" | 4 | `GET /users/me` · `GET /trips/pending` · `GET /trips/my` · `PATCH /trips/{id}/accept` |
+| 6 | **Detalle de viaje (conductor)** — muestra pickup, dropoff y datos del pasajero. Botón "Completar viaje" si el estado es `IN_PROGRESS`. Muestra resumen tras completar | 2 | `GET /trips/{id}` · `PATCH /trips/{id}/complete` |
+| 7 | **Historial** — tabla de viajes pasados para ambos roles con filtro por estado | 2 | `GET /trips` (PASSENGER) · `GET /trips/my` (DRIVER) |
